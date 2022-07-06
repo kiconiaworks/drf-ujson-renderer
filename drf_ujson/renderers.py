@@ -1,12 +1,15 @@
+import datetime
 from uuid import UUID
 
-from rest_framework.renderers import BaseRenderer
 import ujson
+from rest_framework.renderers import BaseRenderer
 
 
 def render_object_default(obj):
     if isinstance(obj, UUID):
         obj = str(obj)
+    elif isinstance(obj, datetime.datetime):
+        obj = obj.isoformat()
     return obj
 
 
