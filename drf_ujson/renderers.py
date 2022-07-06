@@ -1,6 +1,13 @@
-from __future__ import unicode_literals
+from uuid import UUID
+
 from rest_framework.renderers import BaseRenderer
 import ujson
+
+
+def render_object_default(obj):
+    if isinstance(obj, UUID):
+        obj = str(obj)
+    return obj
 
 
 class UJSONRenderer(BaseRenderer):
@@ -20,7 +27,7 @@ class UJSONRenderer(BaseRenderer):
         if data is None:
             return bytes()
 
-        ret = ujson.dumps(data, ensure_ascii=self.ensure_ascii)
+        ret = ujson.dumps(data, ensure_ascii=self.ensure_ascii, default=render_object_default)
         if isinstance(ret, str):
             return bytes(ret.encode('utf-8'))
         return ret
